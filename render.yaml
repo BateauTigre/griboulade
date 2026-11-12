@@ -1,0 +1,28 @@
+# Blueprint Render : https://dashboard.render.com → New → Blueprint → choisir ce dépôt.
+# Crée le serveur de jeu sur l'offre gratuite. Le site (client/) est hébergé à part
+# sur Cloudflare Pages ou Vercel — voir docs/DEPLOIEMENT.md.
+services:
+  - type: web
+    name: griboulade-serveur
+    runtime: node
+    plan: free
+    region: frankfurt
+    # NODE_ENV=production ferait sauter les outils de compilation : on les inclut explicitement.
+    buildCommand: npm ci --include=dev && npm run build:server
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: GAME_RETENTION_DAYS
+        value: "30"
+      - key: DATABASE_SSL
+        value: require
+      # À saisir dans le tableau de bord Render (valeurs propres à ton déploiement) :
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false

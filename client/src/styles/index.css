@@ -1,0 +1,173 @@
+@import 'tailwindcss';
+
+/* ───────────── Identité visuelle : encre, papier et couleurs de feutres ───────────── */
+@theme {
+  --font-display: 'Fredoka', ui-rounded, 'Arial Rounded MT Bold', system-ui, sans-serif;
+  --font-sans: 'Nunito', ui-rounded, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-ink: #241a4b;
+  --color-ink-soft: #5b5180;
+  --color-paper: #fff6e5;
+  --color-paper-dark: #f6e7c8;
+  --color-coral: #ff5d73;
+  --color-tangerine: #ff9a3c;
+  --color-sun: #ffcf33;
+  --color-mint: #2fd9a3;
+  --color-sky: #45c4ff;
+  --color-lilac: #a98bff;
+  --color-bubble: #ff8fd0;
+
+  --shadow-pop-sm: 2px 2px 0 0 var(--color-ink);
+  --shadow-pop: 4px 4px 0 0 var(--color-ink);
+  --shadow-pop-lg: 6px 6px 0 0 var(--color-ink);
+  --shadow-pop-xl: 8px 8px 0 0 var(--color-ink);
+
+  --animate-pop-in: pop-in 0.5s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+  --animate-fade-up: fade-up 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-slide-left: slide-left 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+  --animate-slide-right: slide-right 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+  --animate-wiggle: wiggle 2.4s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 11s ease-in-out infinite;
+  --animate-bounce-soft: bounce-soft 1.6s ease-in-out infinite;
+  --animate-shake: shake 0.5s ease-in-out;
+  --animate-reaction: reaction-rise 2.6s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  --animate-toast: toast-in 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  --animate-tick: tick 1s ease-in-out infinite;
+
+  @keyframes pop-in {
+    0% { opacity: 0; transform: scale(0.6) rotate(-4deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  @keyframes fade-up {
+    0% { opacity: 0; transform: translateY(18px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-left {
+    0% { opacity: 0; transform: translateX(-60px) rotate(-6deg) scale(0.9); }
+    100% { opacity: 1; transform: translateX(0) rotate(0) scale(1); }
+  }
+  @keyframes slide-right {
+    0% { opacity: 0; transform: translateX(60px) rotate(6deg) scale(0.9); }
+    100% { opacity: 1; transform: translateX(0) rotate(0) scale(1); }
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-18px) rotate(8deg); }
+  }
+  @keyframes bounce-soft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  @keyframes reaction-rise {
+    0% { opacity: 0; transform: translateY(0) scale(0.4) rotate(0deg); }
+    12% { opacity: 1; transform: translateY(-30px) scale(1.25) rotate(-8deg); }
+    100% { opacity: 0; transform: translateY(-62vh) scale(1) rotate(14deg); }
+  }
+  @keyframes toast-in {
+    0% { opacity: 0; transform: translateY(-14px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes tick {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background-color: var(--color-paper);
+    /* Papier pointillé, comme une page de carnet. */
+    background-image: radial-gradient(circle, rgb(36 26 75 / 0.09) 1.5px, transparent 1.6px);
+    background-size: 26px 26px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  button, [role='button'], a, label, select, summary {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-sky);
+    outline-offset: 3px;
+    border-radius: 12px;
+  }
+  ::selection {
+    background: var(--color-sun);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* Carte « autocollant » : bord épais à l'encre et ombre décalée. */
+  .card {
+    background: #fff;
+    border: 3px solid var(--color-ink);
+    border-radius: 28px;
+    box-shadow: var(--shadow-pop-lg);
+  }
+  .field {
+    width: 100%;
+    background: #fff;
+    border: 3px solid var(--color-ink);
+    border-radius: 18px;
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--color-ink);
+    transition: box-shadow 0.15s, transform 0.15s;
+  }
+  .field::placeholder {
+    color: rgb(36 26 75 / 0.35);
+    font-weight: 600;
+  }
+  .field:focus {
+    outline: none;
+    box-shadow: var(--shadow-pop);
+    transform: translate(-2px, -2px);
+  }
+  .label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-ink-soft);
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

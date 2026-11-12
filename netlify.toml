@@ -1,0 +1,12 @@
+# Solution de secours pour le site (si Cloudflare Pages et Vercel sont indisponibles).
+[build]
+  command = "npm run build:client"
+  publish = "client/dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
