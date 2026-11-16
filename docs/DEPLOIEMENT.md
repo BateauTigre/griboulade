@@ -195,9 +195,10 @@ https://griboulade.goubill-arthur.workers.dev
 ```
 
 Les liens directs (`/rejoindre/ABCDE`, `/galerie/…`) fonctionnent grâce au réglage
-`"not_found_handling": "single-page-application"` de `wrangler.jsonc`. Le fichier
-`client/public/.assetsignore` (une seule ligne : `_redirects`) empêche Workers de lire le fichier
-`_redirects` prévu pour Pages, qu'il refuse avec l'erreur *« Infinite loop detected in this rule »*.
+`"not_found_handling": "single-page-application"` de `wrangler.jsonc`.
+
+> Il ne faut **pas** de fichier `client/public/_redirects` : Workers refuse la règle `/* /index.html 200`
+> (erreur *« Infinite loop detected in this rule »*), même avec un `.assetsignore`.
 
 ### Option A bis — Cloudflare Pages
 
@@ -212,8 +213,9 @@ Connect to Git** (lien *« Looking to deploy Pages? »* en bas de l'écran de cr
 | Build output directory | `client/dist` |
 | Root directory | *(vide)* |
 
-Variable d'environnement : `VITE_SERVER_URL` (adresse Render, sans barre oblique finale). Le fichier
-`client/public/_redirects` fait fonctionner les liens directs.
+Variable d'environnement : `VITE_SERVER_URL` (adresse Render, sans barre oblique finale). Les liens
+directs fonctionnent sans réglage : sans fichier `404.html`, Pages renvoie `index.html` pour toute
+adresse inconnue.
 
 ### Option B — Vercel
 
@@ -288,9 +290,9 @@ l'arrêt du serveur et restaurés au redémarrage : les joueurs sont reconnecté
 | Erreur « CORS » dans la console du navigateur (F12) | `CLIENT_ORIGIN` ne correspond pas à l'adresse du site | Copie l'adresse exacte du site (avec `https://`, sans `/` final) dans `CLIENT_ORIGIN`. |
 | `/health` affiche `"store":"memory"` | Base non branchée | Vérifie `DATABASE_URL` sur Render ; lis les **Logs**. |
 | « Partie introuvable » dans l'historique | Partie de plus de 30 jours, ou serveur sans base | Augmente `GAME_RETENTION_DAYS`, branche une base. |
-| Page blanche sur `/rejoindre/ABCDE` | Redirection des liens directs absente | Vérifie `wrangler.jsonc` (Cloudflare Workers), `client/public/_redirects` (Cloudflare Pages) ou `vercel.json` (Vercel). |
+| Page blanche sur `/rejoindre/ABCDE` | Redirection des liens directs absente | Vérifie `wrangler.jsonc` (Cloudflare Workers), `vercel.json` (Vercel) ou `netlify.toml` (Netlify). |
 | Cloudflare : *« application detection logic has been run in the root of a workspace »* | Pas de `wrangler.jsonc` à la racine du dépôt | Ajoute le fichier décrit à l'étape 4, option A. |
-| Cloudflare : *« Invalid _redirects configuration… Infinite loop detected »* | Workers lit le `_redirects` prévu pour Pages | Vérifie que `client/public/.assetsignore` existe et contient `_redirects`. |
+| Cloudflare : *« Invalid _redirects configuration… Infinite loop detected »* | Un fichier `client/public/_redirects` est présent | Supprime-le : `wrangler.jsonc` gère déjà les liens directs. |
 | La compilation échoue sur Cloudflare | Version de Node trop ancienne | Vérifie que `.node-version` (valeur `22`) est à la racine, ou ajoute la variable de build `NODE_VERSION=22`. |
 | Erreur de connexion à la base avec `DATABASE_SSL=verify` | Certificat non reconnu | Remets `DATABASE_SSL=require`. |
 
