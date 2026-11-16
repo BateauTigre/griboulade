@@ -195,7 +195,9 @@ https://griboulade.goubill-arthur.workers.dev
 ```
 
 Les liens directs (`/rejoindre/ABCDE`, `/galerie/…`) fonctionnent grâce au réglage
-`"not_found_handling": "single-page-application"` de `wrangler.jsonc`.
+`"not_found_handling": "single-page-application"` de `wrangler.jsonc`. Le fichier
+`client/public/.assetsignore` (une seule ligne : `_redirects`) empêche Workers de lire le fichier
+`_redirects` prévu pour Pages, qu'il refuse avec l'erreur *« Infinite loop detected in this rule »*.
 
 ### Option A bis — Cloudflare Pages
 
@@ -288,6 +290,7 @@ l'arrêt du serveur et restaurés au redémarrage : les joueurs sont reconnecté
 | « Partie introuvable » dans l'historique | Partie de plus de 30 jours, ou serveur sans base | Augmente `GAME_RETENTION_DAYS`, branche une base. |
 | Page blanche sur `/rejoindre/ABCDE` | Redirection des liens directs absente | Vérifie `wrangler.jsonc` (Cloudflare Workers), `client/public/_redirects` (Cloudflare Pages) ou `vercel.json` (Vercel). |
 | Cloudflare : *« application detection logic has been run in the root of a workspace »* | Pas de `wrangler.jsonc` à la racine du dépôt | Ajoute le fichier décrit à l'étape 4, option A. |
+| Cloudflare : *« Invalid _redirects configuration… Infinite loop detected »* | Workers lit le `_redirects` prévu pour Pages | Vérifie que `client/public/.assetsignore` existe et contient `_redirects`. |
 | La compilation échoue sur Cloudflare | Version de Node trop ancienne | Vérifie que `.node-version` (valeur `22`) est à la racine, ou ajoute la variable de build `NODE_VERSION=22`. |
 | Erreur de connexion à la base avec `DATABASE_SSL=verify` | Certificat non reconnu | Remets `DATABASE_SSL=require`. |
 
